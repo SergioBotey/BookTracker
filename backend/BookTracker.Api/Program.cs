@@ -1,3 +1,4 @@
+using BookTracker.Api.Extensions;
 using BookTracker.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,18 +7,24 @@ builder.Services.AddControllers();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddCorsConfiguration(builder.Configuration);
+
+builder.Services.AddApiBehaviorConfiguration();
+
+builder.Services.AddSwaggerDocumentation();
 
 var app = builder.Build();
 
+app.UseGlobalExceptionHandling();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerDocumentation();
 }
 
 app.UseHttpsRedirection();
+
+app.UseCorsConfiguration();
 
 app.UseAuthorization();
 
