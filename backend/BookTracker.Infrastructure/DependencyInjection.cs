@@ -1,4 +1,6 @@
+using BookTracker.Application.Interfaces;
 using BookTracker.Infrastructure.Data;
+using BookTracker.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,14 @@ public static class DependencyInjection
 
         services.AddDbContext<BookTrackerDbContext>(options =>
             options.UseNpgsql(connectionString));
+
+        services.Configure<JwtSettings>(
+            configuration.GetSection("Jwt")
+        );
+
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         return services;
     }
