@@ -16,6 +16,8 @@ builder.Services.AddApiBehaviorConfiguration();
 
 builder.Services.AddSwaggerDocumentation();
 
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
 var app = builder.Build();
 
 app.UseGlobalExceptionHandling();
@@ -28,6 +30,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCorsConfiguration();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

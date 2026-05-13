@@ -1,5 +1,6 @@
 using BookTracker.Application.Interfaces;
 using BookTracker.Infrastructure.Data;
+using BookTracker.Infrastructure.Repositories;
 using BookTracker.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,8 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }
