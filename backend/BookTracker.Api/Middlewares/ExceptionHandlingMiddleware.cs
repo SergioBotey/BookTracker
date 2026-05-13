@@ -37,14 +37,20 @@ public class ExceptionHandlingMiddleware
     {
         context.Response.ContentType = "application/json";
 
-        var statusCode = (int)HttpStatusCode.InternalServerError;
+        var statusCode = exception switch
+        {
+            InvalidOperationException => StatusCodes.Status400BadRequest,
+            _ => StatusCodes.Status500InternalServerError
+        };
 
         context.Response.StatusCode = statusCode;
 
         var response = new ApiErrorResponse
         {
             StatusCode = statusCode,
-            Message = "An unexpected error occurred.",
+            Message = exception is InvalidOperationException
+                ? exception.Message
+                : "An unexpected error occurred.",
             Details = _environment.IsDevelopment() ? exception.Message : null,
             TraceId = context.TraceIdentifier
         };
