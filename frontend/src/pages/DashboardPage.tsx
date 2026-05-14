@@ -1,15 +1,7 @@
-import { useEffect, useState } from "react";
-import { getCurrentUser } from "../api/authApi";
-import type { User } from "../types/auth";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 export function DashboardPage() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    getCurrentUser()
-      .then(setUser)
-      .catch((error) => console.error("Current user error:", error));
-  }, []);
+  const { user, isLoading, error } = useCurrentUser();
 
   return (
     <div>
@@ -19,15 +11,45 @@ export function DashboardPage() {
         Aquí verás tus métricas de lectura, objetivos anuales y progreso mensual.
       </p>
 
-      {user && (
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Usuario autenticado</p>
-          <p className="mt-2 text-lg font-semibold text-slate-900">
-            {user.fullName}
-          </p>
-          <p className="text-sm text-slate-500">{user.email}</p>
+      <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500">Libros registrados</p>
+          <p className="mt-2 text-3xl font-bold text-slate-900">0</p>
         </div>
-      )}
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500">Libros leídos</p>
+          <p className="mt-2 text-3xl font-bold text-slate-900">0</p>
+        </div>
+
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-sm text-slate-500">Meta anual</p>
+          <p className="mt-2 text-3xl font-bold text-slate-900">0%</p>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-slate-500">Sesión actual</p>
+
+        {isLoading && (
+          <p className="mt-2 text-sm text-slate-500">Validando sesión...</p>
+        )}
+
+        {error && (
+          <p className="mt-2 text-sm text-red-600">
+            Tu sesión no es válida. Vuelve a iniciar sesión.
+          </p>
+        )}
+
+        {user && (
+          <div className="mt-2">
+            <p className="text-lg font-semibold text-slate-900">
+              {user.fullName}
+            </p>
+            <p className="text-sm text-slate-500">{user.email}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

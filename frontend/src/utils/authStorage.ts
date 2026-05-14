@@ -39,3 +39,7 @@ export function clearAuthStorage(): void {
   removeToken();
   removeStoredUser();
 }
+
+export function isAuthenticated(): boolean {
+  return Boolean(getToken());
+}

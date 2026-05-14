@@ -36,7 +36,7 @@ export function RegisterPage() {
       setToken(response.token);
       setStoredUser(response.user);
 
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       setApiError(getApiErrorMessage(error));
     }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { login } from "../api/authApi";
@@ -12,8 +12,13 @@ import {
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [apiError, setApiError] = useState<string | null>(null);
 
+  const from =
+  (location.state as { from?: { pathname?: string } })?.from?.pathname ||
+  "/dashboard";
+  
   const {
     register: registerField,
     handleSubmit,
@@ -35,7 +40,7 @@ export function LoginPage() {
       setToken(response.token);
       setStoredUser(response.user);
 
-      navigate("/dashboard");
+      navigate(from, { replace: true });
     } catch (error) {
       setApiError(getApiErrorMessage(error));
     }
